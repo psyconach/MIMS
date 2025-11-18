@@ -1,0 +1,64 @@
+/* VARIABLES */
+:root{
+  --primary:#0a1a2f;
+  --accent:#ff9100;
+  --light-bg:#f4f6f8;
+  --radius:12px;
+  --shadow:0 4px 12px rgba(0,0,0,0.1);
+  --font:"Poppins", Arial, sans-serif;
+}
+
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--font);color:#222;background:white;overflow-x:hidden;scroll-behavior:smooth}
+
+header.header{background:var(--primary);color:white;padding:15px 30px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1000;box-shadow:var(--shadow)}
+.logo{font-weight:700}
+.navbar a{color:white;margin:0 15px;text-decoration:none;font-weight:500;transition:0.3s}
+.navbar a:hover{color:var(--accent)}
+.menu-btn{display:none;background:none;border:none;color:white;font-size:26px}
+
+.hero{background:url('../img/mim.jpg') center/cover no-repeat;height:500px;display:flex;align-items:center;justify-content:center;position:relative;padding:20px}
+.hero::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,0.45)}
+.hero-content{position:relative;color:white;max-width:700px;text-align:center;opacity:0;transform:translateY(30px);animation:fadeUp 1.2s ease forwards}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+.btn-primary{display:inline-block;background:var(--accent);padding:14px 26px;margin-top:20px;color:white;border-radius:var(--radius);text-decoration:none;font-weight:600;box-shadow:var(--shadow);transition:0.2s}
+.btn-primary:hover{transform:translateY(-3px);background:#e57f00}
+
+section{padding:80px 40px}
+.light{background:var(--light-bg)}
+.fade-in{opacity:0;transform:translateY(30px);transition:all 0.8s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+.grid{display:grid;gap:30px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:40px}
+.card{background:white;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;transition:0.3s}
+.card:hover{transform:translateY(-5px);box-shadow:0 8px 24px rgba(0,0,0,0.15)}
+.card img{width:100%;height:180px;object-fit:cover}
+.card-content{padding:20px}
+
+form{max-width:450px;margin:auto;background:white;padding:30px;border-radius:var(--radius);box-shadow:var(--shadow)}
+input,select{width:100%;padding:12px;margin-top:10px;border-radius:var(--radius);border:1px solid #ccc;font-size:1rem}
+
+footer{background:var(--primary);color:white;text-align:center;padding:25px;margin-top:40px}
+
+@media(max-width:768px){
+  .navbar{display:none;flex-direction:column;background:var(--primary);padding:15px}
+  .navbar.show{display:flex}
+  .menu-btn{display:block}
+  .hero{height:65vh}
+}
+
+
+/* Estilo para input con error */
+.input-error {
+  border-color: #e74c3c !important; /* Rojo */
+  background-color: #fceae9;
+}
+
+/* Texto del mensaje de error */
+.error-text {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: -8px; /* Para acercarlo al input */
+  margin-bottom: 10px;
+  display: none; /* Oculto por defecto */
+  font-weight: 500;
+}
