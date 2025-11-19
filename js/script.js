@@ -47,11 +47,22 @@ const UI = {
         faders.forEach(el => appearOnScroll.observe(el));
     },
 
-    initMobileMenu: () => {
+initMobileMenu: () => {
         const menuBtn = document.querySelector('.menu-btn');
         const nav = document.querySelector('.navbar');
         if (menuBtn && nav) {
+            // 1. Abrir/Cerrar al hacer clic en el botón
             menuBtn.addEventListener('click', () => nav.classList.toggle('show'));
+
+            // 2. CERRAR EL MENÚ al hacer clic en cualquier enlace (Overlay Logic)
+            nav.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    // Cierra después de un pequeño retraso para permitir el inicio del scroll
+                    setTimeout(() => {
+                        nav.classList.remove('show');
+                    }, 50); 
+                });
+            });
         }
     }
 };
@@ -86,12 +97,12 @@ const ContactForm = {
                 return; // DETIENE EL ENVÍO
             }
 
-            // 2. Simulación de Envío (Aquí conectarías EmailJS más adelante)
+            // 2. Simulación de Envío 
             const originalBtnText = submitBtn.innerText;
             submitBtn.innerText = 'Enviando...';
             submitBtn.disabled = true;
 
-            // Simulamos retardo de red de 2 segundos
+            // Sim retardo de red de 2 segundos
             setTimeout(() => {
                 console.log('Datos válidos enviados:', {
                     name: form.name.value,
