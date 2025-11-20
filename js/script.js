@@ -77,17 +77,19 @@ const ContactForm = {
         if (!form) return;
 
         // --- Configuración de EmailJS ---
-        const SERVICE_ID = 'default_service'; // ¡REEMPLAZAR!
-        const TEMPLATE_ID = 'template_2h3yj4q'; // ¡REEMPLAZAR!
+        // IDs que ya proporcionaste
+        const PUBLIC_KEY = '9k9iCSjBZCKpr85XX';
+        const SERVICE_ID = 'service_9m3i3kd'; 
+        
+        // Templates
+        const TEMPLATE_ID_COMPANY = 'template_2h3yj4q'; 
+        const TEMPLATE_ID_AUTOREPLY = 'template_txft2bn'; // Nuevo ID para auto-respuesta
         // --------------------------------
 
         const emailInput = document.getElementById('email');
         const emailErrorMsg = document.getElementById('email-error-msg');
         const submitBtn = form.querySelector('button[type="submit"]');
 
-        // Si tu botón no tiene el type="submit" dentro del form:
-        // const submitBtn = document.getElementById('ID_DE_TU_BOTON'); 
-        
         // Evento: Cuando el usuario escribe, quitamos el error si ya corrigió
         emailInput.addEventListener('input', () => {
             Utils.clearError(emailInput, emailErrorMsg);
@@ -117,22 +119,29 @@ const ContactForm = {
                 service: form.service.value
             };
             
-            // 3. Envío Real a EmailJS (Reemplazo de la Simulación)
-            emailjs.send(SERVICE_ID, TEMPLATE_ID, formData)
+            // 3. Envío Real a EmailJS (Se envían dos correos en secuencia)
+            
+            // PRIMER ENVÍO: Notificación a la empresa
+            emailjs.send(SERVICE_ID, TEMPLATE_ID_COMPANY, formData)
                 .then(function(response) {
-                    // Éxito
-                    console.log('Correo enviado con éxito!', response.status, response.text);
-                    alert('✅ ¡Mensaje enviado! Nos pondremos en contacto contigo pronto.');
-                    form.reset();
-
-                }, function(error) {
-                    // Error
-                    console.error('Error al enviar el correo:', error);
-                    alert('❌ Ocurrió un error al enviar el mensaje. Inténtalo de nuevo.');
+                    console.log('1. Correo a la Empresa enviado. Iniciando Auto-respuesta.');
                     
+                    // SEGUNDO ENVÍO: Auto-respuesta al cliente (solo si el primero fue exitoso)
+                    return emailjs.send(SERVICE_ID, TEMPLATE_ID_AUTOREPLY, formData);
+                })
+                .then(function(response) {
+                    // Éxito en AMBOS envíos
+                    console.log('2. Correo de Auto-respuesta enviado con éxito.');
+                    alert('✅ ¡Mensaje enviado! Hemos recibido su solicitud y nos contactaremos en 24 horas.');
+                    form.reset();
+                })
+                .catch(function(error) {
+                    // Si falla cualquiera de los dos envíos, entra aquí.
+                    console.error('Error al enviar uno o ambos correos:', error);
+                    alert('❌ Ocurrió un error al enviar el mensaje. Inténtalo de nuevo.');
                 })
                 .finally(() => {
-                    // Esto se ejecuta al final, haya éxito o error.
+                    // Restaurar botón (se ejecuta al final, haya éxito o error)
                     submitBtn.innerText = originalBtnText;
                     submitBtn.disabled = false;
                 });
@@ -142,10 +151,10 @@ const ContactForm = {
 
 // INICIALIZACIÓN DE LA APP
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Inicialización de EmailJS (antes de usar el formulario)
-    emailjs.init('9k9iCSjBZCKpr85XX'); // ¡REEMPLAZAR!
+    // Inicializa EmailJS (usando la clave pública)
+    emailjs.init('9k9iCSjBZCKpr85XX');
     
-    // 2. Inicialización del resto de la App
+    // Inicialización del resto de la App
     UI.initMobileMenu();
     UI.initAnimations();
     ContactForm.init();
