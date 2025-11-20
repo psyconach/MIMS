@@ -47,7 +47,7 @@ const UI = {
         faders.forEach(el => appearOnScroll.observe(el));
     },
 
-initMobileMenu: () => {
+    initMobileMenu: () => {
         const menuBtn = document.querySelector('.menu-btn');
         const nav = document.querySelector('.navbar');
         if (menuBtn && nav) {
@@ -76,6 +76,16 @@ const ContactForm = {
         const form = document.getElementById('contact-form');
         if (!form) return;
 
+        // --- Configuración de EmailJS ---
+        // IDs que ya proporcionaste
+        const PUBLIC_KEY = '9k9iCSjBZCKpr85XX';
+        const SERVICE_ID = 'service_9m3i3kd'; 
+        
+        // Templates
+        const TEMPLATE_ID_COMPANY = 'template_2h3yj4q'; 
+        const TEMPLATE_ID_AUTOREPLY = 'template_txft2bn'; // Nuevo ID para auto-respuesta
+        // --------------------------------
+
         const emailInput = document.getElementById('email');
         const emailErrorMsg = document.getElementById('email-error-msg');
         const submitBtn = form.querySelector('button[type="submit"]');
@@ -97,33 +107,54 @@ const ContactForm = {
                 return; // DETIENE EL ENVÍO
             }
 
-            // 2. Simulación de Envío 
+            // 2. Preparar datos y deshabilitar botón (inicio del envío)
             const originalBtnText = submitBtn.innerText;
             submitBtn.innerText = 'Enviando...';
             submitBtn.disabled = true;
 
-            // Sim retardo de red de 2 segundos
-            setTimeout(() => {
-                console.log('Datos válidos enviados:', {
-                    name: form.name.value,
-                    email: emailValue,
-                    company: form.company.value,
-                    service: form.service.value
+            const formData = {
+                name: form.name.value,
+                company: form.company.value,
+                email: emailValue, // Usamos el valor validado
+                service: form.service.value
+            };
+            
+            // 3. Envío Real a EmailJS (Se envían dos correos en secuencia)
+            
+            // PRIMER ENVÍO: Notificación a la empresa
+            emailjs.send(SERVICE_ID, TEMPLATE_ID_COMPANY, formData)
+                .then(function(response) {
+                    console.log('1. Correo a la Empresa enviado. Iniciando Auto-respuesta.');
+                    
+                    // SEGUNDO ENVÍO: Auto-respuesta al cliente (solo si el primero fue exitoso)
+                    return emailjs.send(SERVICE_ID, TEMPLATE_ID_AUTOREPLY, formData);
+                })
+                .then(function(response) {
+                    // Éxito en AMBOS envíos
+                    console.log('2. Correo de Auto-respuesta enviado con éxito.');
+                    alert('✅ ¡Mensaje enviado! Hemos recibido su solicitud y nos contactaremos en 24 horas.');
+                    form.reset();
+                })
+                .catch(function(error) {
+                    // Si falla cualquiera de los dos envíos, entra aquí.
+                    console.error('Error al enviar uno o ambos correos:', error);
+                    alert('❌ Ocurrió un error al enviar el mensaje. Inténtalo de nuevo.');
+                })
+                .finally(() => {
+                    // Restaurar botón (se ejecuta al final, haya éxito o error)
+                    submitBtn.innerText = originalBtnText;
+                    submitBtn.disabled = false;
                 });
-                
-                alert('¡Gracias! Hemos recibido tu solicitud correctamente.');
-                form.reset();
-                
-                // Restaurar botón
-                submitBtn.innerText = originalBtnText;
-                submitBtn.disabled = false;
-            }, 1500);
         });
     }
 };
 
 // INICIALIZACIÓN DE LA APP
 document.addEventListener('DOMContentLoaded', () => {
+    // Inicializa EmailJS (usando la clave pública)
+    emailjs.init('9k9iCSjBZCKpr85XX');
+    
+    // Inicialización del resto de la App
     UI.initMobileMenu();
     UI.initAnimations();
     ContactForm.init();
