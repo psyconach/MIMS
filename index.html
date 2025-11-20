@@ -6,13 +6,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>MIMS Chile – Servicios Industriales</title>
   <link rel="stylesheet" href="../MIMS/css/styles.css">
+
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+  <script type="text/javascript">
+    emailjs.init('9k9iCSjBZCKpr85XX')
+  </script>
 </head>
 
 <body>
   <header class="header">
     <div class="logo">MIMS Chile</div>
-    <nav class="navbar"> <a href="#hero">Inicio</a> <a href="#servicios">Servicios</a> <a href="#mision">Nosotros</a> <a
-        href="#contacto">Contacto</a> </nav> <button class="menu-btn" aria-label="Abrir menú">☰</button>
+    <nav class="navbar">
+      <a href="../MIMS/index.html">Inicio</a>
+      <a href="../MIMS/html/galeria.html">Galeria</a>
+      <a href="#servicios">Servicios</a>
+      <a href="#mision">Nosotros</a> <a href="#contacto">Contacto</a>
+    </nav> <button class="menu-btn" aria-label="Abrir menú">☰</button>
   </header>
 
   <main>
@@ -44,7 +55,7 @@
           </div>
         </article>
 
-        <article class="card">
+        <article class="card disabled">
           <img src="../MIMS/img/inspeccion_filtros.jpg" alt="Aseo administrativo e industrial">
           <div class="card-content">
             <h3>Aseo Administrativo e Industrial</h3>
@@ -52,7 +63,7 @@
           </div>
         </article>
 
-        <article class="card">
+        <article class="card disabled">
           <img src="../MIMS/img/movimiento-de-tierras.jpg" alt="Movimiento de tierra">
           <div class="card-content">
             <h3>Movimiento de Tierra</h3>
@@ -111,11 +122,11 @@
         <small id="email-error-msg" class="error-text"></small>
 
         <label for="service">Servicio</label>
-        <label for="service">Servicio</label>
         <select id="service" name="service">
           <option>Mantención de Filtros</option>
           <option>Automatización</option>
-          <option>Movimiento de Tierra</option>
+          <option value="aseo" disabled>Aseo Administrativo e Industrial (no disponible)</option>
+          <option value="movimiento" disabled>Movimiento de Tierra (no disponible)</option>
         </select>
 
         <button class="btn-primary" type="submit">Enviar</button>

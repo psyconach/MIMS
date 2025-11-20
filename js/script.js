@@ -47,7 +47,7 @@ const UI = {
         faders.forEach(el => appearOnScroll.observe(el));
     },
 
-initMobileMenu: () => {
+    initMobileMenu: () => {
         const menuBtn = document.querySelector('.menu-btn');
         const nav = document.querySelector('.navbar');
         if (menuBtn && nav) {
@@ -76,10 +76,18 @@ const ContactForm = {
         const form = document.getElementById('contact-form');
         if (!form) return;
 
+        // --- Configuración de EmailJS ---
+        const SERVICE_ID = 'default_service'; // ¡REEMPLAZAR!
+        const TEMPLATE_ID = 'template_2h3yj4q'; // ¡REEMPLAZAR!
+        // --------------------------------
+
         const emailInput = document.getElementById('email');
         const emailErrorMsg = document.getElementById('email-error-msg');
         const submitBtn = form.querySelector('button[type="submit"]');
 
+        // Si tu botón no tiene el type="submit" dentro del form:
+        // const submitBtn = document.getElementById('ID_DE_TU_BOTON'); 
+        
         // Evento: Cuando el usuario escribe, quitamos el error si ya corrigió
         emailInput.addEventListener('input', () => {
             Utils.clearError(emailInput, emailErrorMsg);
@@ -97,33 +105,47 @@ const ContactForm = {
                 return; // DETIENE EL ENVÍO
             }
 
-            // 2. Simulación de Envío 
+            // 2. Preparar datos y deshabilitar botón (inicio del envío)
             const originalBtnText = submitBtn.innerText;
             submitBtn.innerText = 'Enviando...';
             submitBtn.disabled = true;
 
-            // Sim retardo de red de 2 segundos
-            setTimeout(() => {
-                console.log('Datos válidos enviados:', {
-                    name: form.name.value,
-                    email: emailValue,
-                    company: form.company.value,
-                    service: form.service.value
+            const formData = {
+                name: form.name.value,
+                company: form.company.value,
+                email: emailValue, // Usamos el valor validado
+                service: form.service.value
+            };
+            
+            // 3. Envío Real a EmailJS (Reemplazo de la Simulación)
+            emailjs.send(SERVICE_ID, TEMPLATE_ID, formData)
+                .then(function(response) {
+                    // Éxito
+                    console.log('Correo enviado con éxito!', response.status, response.text);
+                    alert('✅ ¡Mensaje enviado! Nos pondremos en contacto contigo pronto.');
+                    form.reset();
+
+                }, function(error) {
+                    // Error
+                    console.error('Error al enviar el correo:', error);
+                    alert('❌ Ocurrió un error al enviar el mensaje. Inténtalo de nuevo.');
+                    
+                })
+                .finally(() => {
+                    // Esto se ejecuta al final, haya éxito o error.
+                    submitBtn.innerText = originalBtnText;
+                    submitBtn.disabled = false;
                 });
-                
-                alert('¡Gracias! Hemos recibido tu solicitud correctamente.');
-                form.reset();
-                
-                // Restaurar botón
-                submitBtn.innerText = originalBtnText;
-                submitBtn.disabled = false;
-            }, 1500);
         });
     }
 };
 
 // INICIALIZACIÓN DE LA APP
 document.addEventListener('DOMContentLoaded', () => {
+    // 1. Inicialización de EmailJS (antes de usar el formulario)
+    emailjs.init('YOUR_PUBLIC_KEY'); // ¡REEMPLAZAR!
+    
+    // 2. Inicialización del resto de la App
     UI.initMobileMenu();
     UI.initAnimations();
     ContactForm.init();
