@@ -77,13 +77,13 @@ const ContactForm = {
         if (!form) return;
 
         // --- Configuración de EmailJS ---
-        // IDs que ya proporcionaste
+        // IDs 
         const PUBLIC_KEY = '9k9iCSjBZCKpr85XX';
         const SERVICE_ID = 'service_9m3i3kd'; 
         
         // Templates
         const TEMPLATE_ID_COMPANY = 'template_2h3yj4q'; 
-        const TEMPLATE_ID_AUTOREPLY = 'template_txft2bn'; // Nuevo ID para auto-respuesta
+        const TEMPLATE_ID_AUTOREPLY = 'template_txft2bn'; 
         // --------------------------------
 
         const emailInput = document.getElementById('email');
@@ -115,6 +115,7 @@ const ContactForm = {
             const formData = {
                 name: form.name.value,
                 company: form.company.value,
+                phone: form.phone.value,
                 email: emailValue, // Usamos el valor validado
                 service: form.service.value
             };
@@ -159,3 +160,21 @@ document.addEventListener('DOMContentLoaded', () => {
     UI.initAnimations();
     ContactForm.init();
 });
+
+// === FUNCIÓN PARA ABRIR LIGHTBOX ===
+function openLightbox(imgElement) {
+    const modal = document.getElementById('lightbox-modal');
+    const modalImg = document.getElementById('lightbox-image');
+    
+    // Usamos la misma ruta de la imagen clickeada
+    modalImg.src = imgElement.src; 
+    
+    // Mostramos el modal
+    modal.classList.add('active');
+}
+
+// === FUNCIÓN PARA CERRAR LIGHTBOX ===
+function closeLightbox() {
+    const modal = document.getElementById('lightbox-modal');
+    modal.classList.remove('active');
+}
