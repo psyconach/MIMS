@@ -115,6 +115,7 @@ const ContactForm = {
             const formData = {
                 name: form.name.value,
                 company: form.company.value,
+                phone: form.phone.value,
                 email: emailValue, // Usamos el valor validado
                 service: form.service.value
             };
