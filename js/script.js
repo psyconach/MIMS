@@ -143,7 +143,7 @@ const ContactForm = {
 // INICIALIZACIÓN DE LA APP
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Inicialización de EmailJS (antes de usar el formulario)
-    emailjs.init('YOUR_PUBLIC_KEY'); // ¡REEMPLAZAR!
+    emailjs.init('9k9iCSjBZCKpr85XX'); // ¡REEMPLAZAR!
     
     // 2. Inicialización del resto de la App
     UI.initMobileMenu();
